@@ -1,0 +1,22 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- AlterTable
+ALTER TABLE [dbo].[Employee] ADD [documentData] VARBINARY(max),
+[documentMimeType] VARCHAR(100),
+[imageData] VARBINARY(max),
+[imageMimeType] VARCHAR(100);
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

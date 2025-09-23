@@ -1,0 +1,34 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- CreateTable
+CREATE TABLE [dbo].[Employee] (
+    [id] INT NOT NULL IDENTITY(1,1),
+    [firstName] NVARCHAR(1000) NOT NULL,
+    [lastName] NVARCHAR(1000) NOT NULL,
+    [email] NVARCHAR(1000) NOT NULL,
+    [phoneNumber] CHAR(10) NOT NULL,
+    [department] NVARCHAR(1000) NOT NULL,
+    [position] NVARCHAR(1000) NOT NULL,
+    [salary] DECIMAL(10,2) NOT NULL,
+    [dateOfJoining] DATETIME2 NOT NULL,
+    [address] NVARCHAR(1000) NOT NULL,
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Employee_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [updatedAt] DATETIME2 NOT NULL,
+    CONSTRAINT [Employee_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Employee_email_key] UNIQUE NONCLUSTERED ([email])
+);
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

@@ -1,0 +1,380 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"EmployeeResponse": {
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phoneNumber": {
+						"type": "string"
+					},
+					"department": {
+						"type": "string"
+					},
+					"position": {
+						"type": "string"
+					},
+					"salary": {
+						"type": "number",
+						"format": "double"
+					},
+					"dateOfJoining": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"employeeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"isDeleted": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"email",
+					"phoneNumber",
+					"department",
+					"position",
+					"salary",
+					"dateOfJoining",
+					"address",
+					"employeeId",
+					"createdAt",
+					"updatedAt",
+					"isDeleted"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "employee-task-backend",
+		"version": "1.0.0",
+		"contact": {}
+	},
+	"paths": {
+		"/api/employees": {
+			"get": {
+				"operationId": "ListEmployees",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/EmployeeResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateEmployee",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EmployeeResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Email must be unique"
+					}
+				},
+				"description": "Create employee",
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"firstName": {
+										"type": "string"
+									},
+									"lastName": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"phoneNumber": {
+										"type": "string"
+									},
+									"department": {
+										"type": "string"
+									},
+									"position": {
+										"type": "string"
+									},
+									"salary": {
+										"type": "string"
+									},
+									"dateOfJoining": {
+										"type": "string"
+									},
+									"address": {
+										"type": "string"
+									},
+									"isActive": {
+										"type": "string"
+									},
+									"image": {
+										"type": "string",
+										"format": "binary"
+									},
+									"document": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"firstName",
+									"lastName",
+									"email",
+									"phoneNumber",
+									"department",
+									"position",
+									"salary",
+									"dateOfJoining",
+									"address",
+									"isActive",
+									"image",
+									"document"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/employees/check-email": {
+			"get": {
+				"operationId": "CheckEmail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"isUnique": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"isUnique"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "email",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "excludeId",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/employees/{employeeId}": {
+			"put": {
+				"operationId": "UpdateEmployee",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EmployeeResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Employee not found"
+					},
+					"409": {
+						"description": "Email must be unique"
+					}
+				},
+				"description": "Update employee",
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "employeeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"firstName": {
+										"type": "string"
+									},
+									"lastName": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"department": {
+										"type": "string"
+									},
+									"position": {
+										"type": "string"
+									},
+									"salary": {
+										"type": "string"
+									},
+									"dateOfJoining": {
+										"type": "string"
+									},
+									"address": {
+										"type": "string"
+									},
+									"isActive": {
+										"type": "string"
+									},
+									"phoneNumber": {
+										"type": "string"
+									},
+									"image": {
+										"type": "string",
+										"format": "binary"
+									},
+									"document": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"firstName",
+									"lastName",
+									"email",
+									"department",
+									"position",
+									"salary",
+									"dateOfJoining",
+									"address",
+									"isActive"
+								]
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteEmployee",
+				"responses": {
+					"204": {
+						"description": "No Content"
+					},
+					"404": {
+						"description": "Employee not found"
+					}
+				},
+				"description": "Soft delete employee",
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "employeeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

@@ -1,0 +1,33 @@
+// Datasource for SQL Server
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Employee {
+  employeeId    Int      @id @default(autoincrement())
+  firstName     String   @db.VarChar(100)
+  lastName      String   @db.VarChar(100)
+  email         String   @db.VarChar(255)
+  phoneNumber   String   @db.Char(10)
+  department    String   @db.VarChar(100)
+  position      String   @db.VarChar(100)
+  salary        Decimal  @db.Decimal(10, 2)
+  dateOfJoining DateTime @db.Date
+  address       String   @db.VarChar(1000)
+  isActive      Boolean  @default(true) @db.Bit
+  isDeleted     Boolean  @default(false) @db.Bit
+  createdBy     Int      @default(1)
+  updatedBy     Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  imageMimeType     String? @db.VarChar(100)
+  imageData         Bytes?
+  documentMimeType  String? @db.VarChar(100)
+  documentData      Bytes?
+  @@unique([email, isDeleted])
+}
