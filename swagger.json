@@ -196,6 +196,90 @@
 				}
 			}
 		},
+		"/api/employees/search": {
+			"get": {
+				"operationId": "Search",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"pageSize": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"items": {
+											"items": {
+												"$ref": "#/components/schemas/EmployeeResponse"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"pageSize",
+										"page",
+										"total",
+										"items"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search employees with pagination",
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "q",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/employees/check-email": {
 			"get": {
 				"operationId": "CheckEmail",
@@ -245,6 +329,37 @@
 			}
 		},
 		"/api/employees/{employeeId}": {
+			"get": {
+				"operationId": "GetEmployee",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EmployeeResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get single employee by id",
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "employeeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
 			"put": {
 				"operationId": "UpdateEmployee",
 				"responses": {
@@ -282,7 +397,7 @@
 					}
 				],
 				"requestBody": {
-					"required": true,
+					"required": false,
 					"content": {
 						"multipart/form-data": {
 							"schema": {
@@ -326,18 +441,7 @@
 										"type": "string",
 										"format": "binary"
 									}
-								},
-								"required": [
-									"firstName",
-									"lastName",
-									"email",
-									"department",
-									"position",
-									"salary",
-									"dateOfJoining",
-									"address",
-									"isActive"
-								]
+								}
 							}
 						}
 					}
@@ -354,6 +458,172 @@
 					}
 				},
 				"description": "Soft delete employee",
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "employeeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/employees/{employeeId}/image/meta": {
+			"get": {
+				"operationId": "GetEmployeeImageMeta",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"fileName": {
+											"type": "string",
+											"nullable": true
+										},
+										"sizeBytes": {
+											"type": "number",
+											"format": "double",
+											"nullable": true
+										},
+										"mimeType": {
+											"type": "string",
+											"nullable": true
+										}
+									},
+									"required": [
+										"fileName",
+										"sizeBytes",
+										"mimeType"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "employeeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/employees/{employeeId}/document/meta": {
+			"get": {
+				"operationId": "GetEmployeeDocumentMeta",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"fileName": {
+											"type": "string",
+											"nullable": true
+										},
+										"sizeBytes": {
+											"type": "number",
+											"format": "double",
+											"nullable": true
+										},
+										"mimeType": {
+											"type": "string",
+											"nullable": true
+										}
+									},
+									"required": [
+										"fileName",
+										"sizeBytes",
+										"mimeType"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "employeeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/employees/{employeeId}/image": {
+			"get": {
+				"operationId": "GetEmployeeImage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Stream employee image bytes",
+				"tags": [
+					"Employees"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "employeeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/employees/{employeeId}/document": {
+			"get": {
+				"operationId": "GetEmployeeDocument",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Stream employee document bytes",
 				"tags": [
 					"Employees"
 				],

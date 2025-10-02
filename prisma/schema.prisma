@@ -23,11 +23,13 @@ model Employee {
   isDeleted     Boolean  @default(false) @db.Bit
   createdBy     Int      @default(1)
   updatedBy     Int      @default(1)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now()) @db.Date
+  updatedAt     DateTime @updatedAt @db.Date
   imageMimeType     String? @db.VarChar(100)
   imageData         Bytes?
+  imageFileName     String? @db.VarChar(255)
   documentMimeType  String? @db.VarChar(100)
   documentData      Bytes?
+  documentFileName  String? @db.VarChar(255)
   @@unique([email, isDeleted])
 }

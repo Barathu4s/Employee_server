@@ -82,6 +82,39 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmployeeController_search: Record<string, TsoaRoute.ParameterSchema> = {
+                q: {"in":"query","name":"q","dataType":"string"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                pageSize: {"in":"query","name":"pageSize","dataType":"double"},
+                sort: {"in":"query","name":"sort","dataType":"string"},
+        };
+        app.get('/api/employees/search',
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController)),
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController.prototype.search)),
+
+            async function EmployeeController_search(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmployeeController_search, request, response });
+
+                const controller = new EmployeeController();
+
+              await templateService.apiHandler({
+                methodName: 'search',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeeController_checkEmail: Record<string, TsoaRoute.ParameterSchema> = {
                 email: {"in":"query","name":"email","required":true,"dataType":"string"},
                 excludeId: {"in":"query","name":"excludeId","dataType":"double"},
@@ -102,6 +135,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'checkEmail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmployeeController_getEmployee: Record<string, TsoaRoute.ParameterSchema> = {
+                employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"double"},
+        };
+        app.get('/api/employees/:employeeId',
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController)),
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController.prototype.getEmployee)),
+
+            async function EmployeeController_getEmployee(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmployeeController_getEmployee, request, response });
+
+                const controller = new EmployeeController();
+
+              await templateService.apiHandler({
+                methodName: 'getEmployee',
                 controller,
                 response,
                 next,
@@ -166,15 +229,15 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsEmployeeController_updateEmployee: Record<string, TsoaRoute.ParameterSchema> = {
                 employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"double"},
-                firstName: {"in":"formData","name":"firstName","required":true,"dataType":"string"},
-                lastName: {"in":"formData","name":"lastName","required":true,"dataType":"string"},
-                email: {"in":"formData","name":"email","required":true,"dataType":"string"},
-                department: {"in":"formData","name":"department","required":true,"dataType":"string"},
-                position: {"in":"formData","name":"position","required":true,"dataType":"string"},
-                salary: {"in":"formData","name":"salary","required":true,"dataType":"string"},
-                dateOfJoining: {"in":"formData","name":"dateOfJoining","required":true,"dataType":"string"},
-                address: {"in":"formData","name":"address","required":true,"dataType":"string"},
-                isActive: {"in":"formData","name":"isActive","required":true,"dataType":"string"},
+                firstName: {"in":"formData","name":"firstName","dataType":"string"},
+                lastName: {"in":"formData","name":"lastName","dataType":"string"},
+                email: {"in":"formData","name":"email","dataType":"string"},
+                department: {"in":"formData","name":"department","dataType":"string"},
+                position: {"in":"formData","name":"position","dataType":"string"},
+                salary: {"in":"formData","name":"salary","dataType":"string"},
+                dateOfJoining: {"in":"formData","name":"dateOfJoining","dataType":"string"},
+                address: {"in":"formData","name":"address","dataType":"string"},
+                isActive: {"in":"formData","name":"isActive","dataType":"string"},
                 phoneNumber: {"in":"formData","name":"phoneNumber","dataType":"string"},
                 image: {"in":"formData","name":"image","dataType":"file"},
                 document: {"in":"formData","name":"document","dataType":"file"},
@@ -240,6 +303,126 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 next,
                 validatedArgs,
                 successStatus: 204,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmployeeController_getEmployeeImageMeta: Record<string, TsoaRoute.ParameterSchema> = {
+                employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"double"},
+        };
+        app.get('/api/employees/:employeeId/image/meta',
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController)),
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController.prototype.getEmployeeImageMeta)),
+
+            async function EmployeeController_getEmployeeImageMeta(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmployeeController_getEmployeeImageMeta, request, response });
+
+                const controller = new EmployeeController();
+
+              await templateService.apiHandler({
+                methodName: 'getEmployeeImageMeta',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmployeeController_getEmployeeDocumentMeta: Record<string, TsoaRoute.ParameterSchema> = {
+                employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"double"},
+        };
+        app.get('/api/employees/:employeeId/document/meta',
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController)),
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController.prototype.getEmployeeDocumentMeta)),
+
+            async function EmployeeController_getEmployeeDocumentMeta(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmployeeController_getEmployeeDocumentMeta, request, response });
+
+                const controller = new EmployeeController();
+
+              await templateService.apiHandler({
+                methodName: 'getEmployeeDocumentMeta',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmployeeController_getEmployeeImage: Record<string, TsoaRoute.ParameterSchema> = {
+                employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"double"},
+        };
+        app.get('/api/employees/:employeeId/image',
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController)),
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController.prototype.getEmployeeImage)),
+
+            async function EmployeeController_getEmployeeImage(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmployeeController_getEmployeeImage, request, response });
+
+                const controller = new EmployeeController();
+
+              await templateService.apiHandler({
+                methodName: 'getEmployeeImage',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmployeeController_getEmployeeDocument: Record<string, TsoaRoute.ParameterSchema> = {
+                employeeId: {"in":"path","name":"employeeId","required":true,"dataType":"double"},
+        };
+        app.get('/api/employees/:employeeId/document',
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController)),
+            ...(fetchMiddlewares<RequestHandler>(EmployeeController.prototype.getEmployeeDocument)),
+
+            async function EmployeeController_getEmployeeDocument(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmployeeController_getEmployeeDocument, request, response });
+
+                const controller = new EmployeeController();
+
+              await templateService.apiHandler({
+                methodName: 'getEmployeeDocument',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
               });
             } catch (err) {
                 return next(err);
