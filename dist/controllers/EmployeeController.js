@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmployeeController = void 0;
 const tsoa_1 = require("tsoa");
 const EmployeeService_1 = require("../services/EmployeeService");
-// no-op
 let EmployeeController = class EmployeeController extends tsoa_1.Controller {
     constructor() {
         super(...arguments);
@@ -24,6 +23,10 @@ let EmployeeController = class EmployeeController extends tsoa_1.Controller {
     async listEmployees() {
         return this.service.listEmployees();
     }
+    /** Search employees with pagination */
+    async search(q, page, pageSize, sort) {
+        return this.service.searchEmployees(q || '', page, pageSize, sort);
+    }
     async checkEmail(email, excludeId) {
         if (!email) {
             this.setStatus(400);
@@ -31,6 +34,10 @@ let EmployeeController = class EmployeeController extends tsoa_1.Controller {
         }
         const isUnique = await this.service.isEmailUnique(email, excludeId);
         return { isUnique };
+    }
+    /** Get single employee by id */
+    async getEmployee(employeeId) {
+        return this.service.getEmployeeById(employeeId);
     }
     /** Create employee */
     async createEmployee(firstName, lastName, email, phoneNumber, department, position, salary, dateOfJoining, address, isActive, image, document) {
@@ -41,7 +48,28 @@ let EmployeeController = class EmployeeController extends tsoa_1.Controller {
     }
     /** Update employee */
     async updateEmployee(employeeId, firstName, lastName, email, department, position, salary, dateOfJoining, address, isActive, phoneNumber, image, document) {
-        const employeeData = { firstName, lastName, email, phoneNumber: phoneNumber || '', department, position, salary, dateOfJoining, address, isActive };
+        const cleanValue = (val) => {
+            if (val === undefined || val === null)
+                return undefined;
+            const str = String(val).trim();
+            if (str === '' || str === 'string')
+                return undefined;
+            return val;
+        };
+        const salaryVal = cleanValue(salary) !== undefined ? Number(cleanValue(salary)) : undefined;
+        const isActiveVal = cleanValue(isActive);
+        const employeeData = {
+            firstName: cleanValue(firstName),
+            lastName: cleanValue(lastName),
+            email: cleanValue(email),
+            phoneNumber: cleanValue(phoneNumber),
+            department: cleanValue(department),
+            position: cleanValue(position),
+            salary: salaryVal,
+            dateOfJoining: cleanValue(dateOfJoining),
+            address: cleanValue(address),
+            isActive: typeof isActiveVal === 'string' ? isActiveVal === 'true' : isActiveVal,
+        };
         return this.service.updateEmployee(employeeId, employeeData, { image, document });
     }
     /** Soft delete employee */
@@ -49,6 +77,28 @@ let EmployeeController = class EmployeeController extends tsoa_1.Controller {
         await this.service.deleteEmployee(employeeId);
         this.setStatus(204);
         return;
+    }
+    async getEmployeeImageMeta(employeeId) {
+        return this.service.getEmployeeFileMeta(employeeId, 'image');
+    }
+    async getEmployeeDocumentMeta(employeeId) {
+        return this.service.getEmployeeFileMeta(employeeId, 'document');
+    }
+    /** Stream employee image bytes */
+    async getEmployeeImage(employeeId) {
+        const file = await this.service.getEmployeeFile(employeeId, 'image');
+        this.setHeader('Content-Type', file.mimeType);
+        this.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(file.fileName)}"`);
+        this.setHeader('Cache-Control', 'private, max-age=300');
+        return file.data;
+    }
+    /** Stream employee document bytes */
+    async getEmployeeDocument(employeeId) {
+        const file = await this.service.getEmployeeFile(employeeId, 'document');
+        this.setHeader('Content-Type', file.mimeType);
+        this.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(file.fileName)}"`);
+        this.setHeader('Cache-Control', 'private, max-age=300');
+        return file.data;
     }
 };
 exports.EmployeeController = EmployeeController;
@@ -59,6 +109,16 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EmployeeController.prototype, "listEmployees", null);
 __decorate([
+    (0, tsoa_1.Get)('search'),
+    __param(0, (0, tsoa_1.Query)()),
+    __param(1, (0, tsoa_1.Query)()),
+    __param(2, (0, tsoa_1.Query)()),
+    __param(3, (0, tsoa_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number, Number, String]),
+    __metadata("design:returntype", Promise)
+], EmployeeController.prototype, "search", null);
+__decorate([
     (0, tsoa_1.Get)('check-email'),
     __param(0, (0, tsoa_1.Query)()),
     __param(1, (0, tsoa_1.Query)()),
@@ -66,6 +126,13 @@ __decorate([
     __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
 ], EmployeeController.prototype, "checkEmail", null);
+__decorate([
+    (0, tsoa_1.Get)('{employeeId}'),
+    __param(0, (0, tsoa_1.Path)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], EmployeeController.prototype, "getEmployee", null);
 __decorate([
     (0, tsoa_1.SuccessResponse)('201', 'Created'),
     (0, tsoa_1.Response)('409', 'Email must be unique'),
@@ -118,6 +185,34 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], EmployeeController.prototype, "deleteEmployee", null);
+__decorate([
+    (0, tsoa_1.Get)('{employeeId}/image/meta'),
+    __param(0, (0, tsoa_1.Path)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], EmployeeController.prototype, "getEmployeeImageMeta", null);
+__decorate([
+    (0, tsoa_1.Get)('{employeeId}/document/meta'),
+    __param(0, (0, tsoa_1.Path)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], EmployeeController.prototype, "getEmployeeDocumentMeta", null);
+__decorate([
+    (0, tsoa_1.Get)('{employeeId}/image'),
+    __param(0, (0, tsoa_1.Path)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], EmployeeController.prototype, "getEmployeeImage", null);
+__decorate([
+    (0, tsoa_1.Get)('{employeeId}/document'),
+    __param(0, (0, tsoa_1.Path)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], EmployeeController.prototype, "getEmployeeDocument", null);
 exports.EmployeeController = EmployeeController = __decorate([
     (0, tsoa_1.Route)('api/employees'),
     (0, tsoa_1.Tags)('Employees')

@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Route, Tags, SuccessResponse, Response, Query, Path, Consumes, UploadedFile, FormField } from 'tsoa';
 import { EmployeeService } from '../services/EmployeeService';
 import { EmployeeResponse } from '../models/employee';
-// no-op
 
 @Route('api/employees')
 @Tags('Employees')
@@ -13,6 +12,17 @@ export class EmployeeController extends Controller {
     return this.service.listEmployees();
   }
 
+  /** Search employees with pagination */
+  @Get('search')
+  public async search(
+    @Query() q?: string,
+    @Query() page?: number,
+    @Query() pageSize?: number,
+    @Query() sort?: string,
+  ): Promise<{ items: EmployeeResponse[]; total: number; page: number; pageSize: number }> {
+    return this.service.searchEmployees(q || '', page, pageSize, sort);
+  }
+
   @Get('check-email')
   public async checkEmail(@Query() email: string, @Query() excludeId?: number): Promise<{ isUnique: boolean }> {
     if (!email) {
@@ -21,6 +31,12 @@ export class EmployeeController extends Controller {
     }
     const isUnique = await this.service.isEmailUnique(email, excludeId);
     return { isUnique };
+  }
+
+  /** Get single employee by id */
+  @Get('{employeeId}')
+  public async getEmployee(@Path() employeeId: number): Promise<EmployeeResponse> {
+    return this.service.getEmployeeById(employeeId);
   }
 
   /** Create employee */
@@ -100,6 +116,37 @@ export class EmployeeController extends Controller {
     this.setStatus(204);
     return;
   }
+
+  @Get('{employeeId}/image/meta')
+  public async getEmployeeImageMeta(@Path() employeeId: number): Promise<{ mimeType: string | null; sizeBytes: number | null; fileName: string | null }> {
+    return this.service.getEmployeeFileMeta(employeeId, 'image');
+  }
+
+  @Get('{employeeId}/document/meta')
+  public async getEmployeeDocumentMeta(@Path() employeeId: number): Promise<{ mimeType: string | null; sizeBytes: number | null; fileName: string | null }> {
+    return this.service.getEmployeeFileMeta(employeeId, 'document');
+  }
+
+  /** Stream employee image bytes */
+  @Get('{employeeId}/image')
+  public async getEmployeeImage(@Path() employeeId: number): Promise<any> {
+    const file = await this.service.getEmployeeFile(employeeId, 'image');
+    this.setHeader('Content-Type', file.mimeType);
+    this.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(file.fileName)}"`);
+    this.setHeader('Cache-Control', 'private, max-age=300');
+    return file.data;
+  }
+
+  /** Stream employee document bytes */
+  @Get('{employeeId}/document')
+  public async getEmployeeDocument(@Path() employeeId: number): Promise<any> {
+    const file = await this.service.getEmployeeFile(employeeId, 'document');
+    this.setHeader('Content-Type', file.mimeType);
+    this.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(file.fileName)}"`);
+    this.setHeader('Cache-Control', 'private, max-age=300');
+    return file.data;
+  }
+
 }
 
 
